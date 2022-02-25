@@ -6,8 +6,7 @@ export const server = new ApolloServer({
   schema,
 });
 
-const port = 4000;
-
+const port = process.env.PORT || 4000;
 server.listen({ port }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });

@@ -1,5 +1,7 @@
 import { UserInputError } from "apollo-server-errors";
 import { objectType, extendType, stringArg, intArg, nonNull } from "nexus";
+import { NasaResponseImage } from "../../types";
+import { NasaServiceError } from "../errors/NasaServiceError";
 import NasaImageService from "../services/NasaImageService";
 
 export const Image = objectType({
@@ -31,7 +33,9 @@ export const ImageQuery = extendType({
       },
       async resolve(parent, args, context, info) {
         if (!args.q) {
-          throw new UserInputError("Bad input error, search arg not provided");
+          throw new UserInputError("Search query invalid", {
+            argumentName: "q",
+          });
         }
 
         try {
@@ -42,33 +46,26 @@ export const ImageQuery = extendType({
           });
 
           const { data } = response;
-          const feed: any = [];
+
           let totalPages = Math.ceil(
             data.collection.metadata["total_hits"] / 100
           );
 
           // Simple formatted data
-          data.collection.items.forEach((item: any) => {
-            const title = item.data[0].title || "Title not provided";
-            const description =
-              item.data[0].description ||
-              item.data[0]["description_508"] ||
-              "Description not provided";
-            const href = item.links[0].href || "";
-            feed.push({
-              title,
-              description,
-              href,
-            });
+          const collection: any = [];
+          data.collection.items.forEach((item: NasaResponseImage) => {
+            collection.push(NasaImageService.extractImageData(item));
           });
 
           return {
-            collection: feed,
+            collection,
             totalPages,
             currentPage,
           };
         } catch (error) {
-          throw new Error("An error occurred for query images");
+          throw new NasaServiceError(
+            "An internal error occurred while fulfilling the request"
+          );
         }
       },
     });
