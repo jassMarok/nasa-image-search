@@ -6,6 +6,7 @@
 - Extra long descriptions have been cut short for better aesthetics, a simple solution to cut on white space after max words is used
 - An empty search is short circuited on app
 - Although search input is throttled, it can lead to excessive calls in some cases if this happens please wait for few minutes before continuing.
+- No effort has been made to make the app mobile friendly
 
 ## Available Scripts
 

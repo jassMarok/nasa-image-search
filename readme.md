@@ -6,3 +6,5 @@
 - Nexus Graphql
 - Typescript
 - React
+- Tailwind CSS
+- Lodash debounce
