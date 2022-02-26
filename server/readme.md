@@ -3,7 +3,7 @@
 ## Setup
 
 - run `yarn install` to install dependencies
-- start server with `yarn start`
+- start server for local development with `yarn dev`
 
 ## API Assumptions
 
